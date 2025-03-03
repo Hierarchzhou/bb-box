@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 255, 65; /* 黑客帝国绿色 */
+  --background-start-rgb: 13, 2, 8; /* 黑客帝国黑色 */
+  --background-end-rgb: 13, 2, 8; /* 黑客帝国黑色 */
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: 'Courier New', monospace; /* 等宽字体 */
+}
+
+/* 黑客帝国代码雨效果 */
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.matrix-rain span {
+  color: #00FF41;
+  text-shadow: 0 0 5px #00FF41;
+  animation: matrix-rain 2s linear infinite;
+}
+
+/* 闪烁效果 */
+.flicker {
+  animation: flicker 0.5s linear infinite;
+}
+
+/* 链接样式 */
+a {
+  color: #00FF41;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #FFFFFF;
+  text-shadow: 0 0 5px #00FF41;
+}
+
+/* 按钮样式 */
+.matrix-button {
+  background-color: transparent;
+  border: 1px solid #00FF41;
+  color: #00FF41;
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
+}
+
+.matrix-button:hover {
+  background-color: #00FF41;
+  color: #0D0208;
+  box-shadow: 0 0 10px #00FF41;
+}
+
+/* 输入框样式 */
+.matrix-input {
+  background-color: #0D0208;
+  border: 1px solid #00FF41;
+  color: #00FF41;
+  padding: 0.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.matrix-input:focus {
+  outline: none;
+  box-shadow: 0 0 5px #00FF41;
+}
+
+/* 卡片样式 */
+.matrix-card {
+  background-color: rgba(13, 2, 8, 0.8);
+  border: 1px solid #00FF41;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.matrix-card:hover {
+  box-shadow: 0 0 10px #00FF41;
+}
+
+/* 标题样式 */
+h1, h2, h3, h4, h5, h6 {
+  color: #00FF41;
+  text-shadow: 0 0 5px #00FF41;
+} 

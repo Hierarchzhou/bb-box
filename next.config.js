@@ -11,6 +11,7 @@ const nextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
+    domains: ['via.placeholder.com'], // 如果您使用了外部图片域名
   },
   
   // 严格模式
@@ -19,7 +20,7 @@ const nextConfig = {
   // 实验性功能
   experimental: {
     // 应用目录
-    appDir: true,
+    // appDir: true,
   },
 };
 

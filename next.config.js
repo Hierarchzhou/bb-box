@@ -15,12 +15,6 @@ const nextConfig = {
   
   // 严格模式
   reactStrictMode: true,
-  
-  // 实验性功能
-  experimental: {
-    // 应用目录
-    // appDir: true,
-  },
 };
 
 module.exports = nextConfig; 

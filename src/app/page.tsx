@@ -1,8 +1,9 @@
 import { getSortedPostsData } from '@/lib/posts'; // 导入获取文章数据的函数
 import ProfileCard from '@/components/ProfileCard'; // 导入个人名片组件
 import PostCard from '@/components/PostCard'; // 导入文章卡片组件
-import SearchBar from '@/components/SearchBar'; // 导入搜索栏组件
+import SearchBarWrapper from '@/components/SearchBarWrapper';
 import { Suspense } from 'react'; // 导入React的Suspense组件
+import PostList from '@/components/PostList'; // 假设您有这个组件
 
 // 设置页面重新验证时间（ISR）
 export const revalidate = 3600; // 每小时重新验证一次
@@ -11,16 +12,13 @@ export const revalidate = 3600; // 每小时重新验证一次
 function PostsSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {[1, 2, 3, 4].map((i) => (
+      {[1, 2, 3, 4, 5, 6].map((i) => (
         <div key={i} className="matrix-card h-64 animate-pulse">
           <div className="h-6 bg-matrix-green bg-opacity-20 rounded w-3/4 mb-4"></div>
           <div className="h-4 bg-matrix-green bg-opacity-10 rounded w-1/4 mb-6"></div>
           <div className="h-4 bg-matrix-green bg-opacity-10 rounded w-full mb-2"></div>
           <div className="h-4 bg-matrix-green bg-opacity-10 rounded w-5/6 mb-2"></div>
-          <div className="h-4 bg-matrix-green bg-opacity-10 rounded w-4/6 mb-6"></div>
-          <div className="flex justify-end">
-            <div className="h-4 bg-matrix-green bg-opacity-20 rounded w-1/4"></div>
-          </div>
+          <div className="h-4 bg-matrix-green bg-opacity-10 rounded w-4/6"></div>
         </div>
       ))}
     </div>
@@ -49,6 +47,16 @@ async function PostsList() {
   );
 }
 
+// 客户端组件，用于使用 useSearchParams
+function HomeContent() {
+  // 这里使用 useSearchParams 的逻辑
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <PostList />
+    </div>
+  );
+}
+
 /**
  * 首页组件
  * 展示个人名片和所有文章的列表
@@ -62,7 +70,7 @@ export default function Home() {
       </h1>
       
       {/* 搜索栏 */}
-      <SearchBar />
+      <SearchBarWrapper />
       
       {/* 内容区域 - 使用网格布局 */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -79,7 +87,7 @@ export default function Home() {
           
           {/* 使用Suspense包装文章列表，提供加载状态 */}
           <Suspense fallback={<PostsSkeleton />}>
-            <PostsList />
+            <PostList />
           </Suspense>
         </div>
       </div>

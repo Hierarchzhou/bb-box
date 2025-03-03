@@ -1,11 +1,12 @@
 'use client'; // 声明这是一个客户端组件
 
-import { useState, useEffect, useCallback, useTransition } from 'react'; // 导入React钩子
+import { useState, useEffect, useCallback, useTransition, Suspense } from 'react'; // 导入React钩子
 import { useSearchParams, useRouter } from 'next/navigation'; // 导入Next.js的搜索参数和路由钩子
 import { searchPosts } from '@/lib/posts'; // 导入搜索文章的函数
 import SearchBar from '@/components/SearchBar'; // 导入搜索栏组件
 import PostCard from '@/components/PostCard'; // 导入文章卡片组件
 import { PostMetadata } from '@/lib/posts'; // 导入文章元数据接口
+import SearchContent from '@/components/SearchContent';
 
 /**
  * 搜索结果骨架屏组件
@@ -29,25 +30,14 @@ function SearchResultsSkeleton() {
   );
 }
 
-/**
- * 搜索页面组件
- * 允许用户搜索文章并显示搜索结果
- */
-export default function SearchPage() {
-  // 获取URL中的搜索参数和路由
+// 创建一个客户端组件来使用 useSearchParams
+function SearchContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const query = searchParams.get('q') || '';
-  
-  // 搜索结果状态
   const [searchResults, setSearchResults] = useState<PostMetadata[]>([]);
-  // 是否已搜索状态
   const [hasSearched, setHasSearched] = useState(false);
-  // 加载状态
   const [isLoading, setIsLoading] = useState(false);
-  // 错误状态
   const [error, setError] = useState<string | null>(null);
-  // 使用useTransition来优化UI响应
   const [isPending, startTransition] = useTransition();
   
   // 防抖搜索函数
@@ -97,16 +87,9 @@ export default function SearchPage() {
   }, [query]);
   
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* 页面标题 */}
-      <h1 className="text-3xl font-bold text-center mb-8 flicker">
-        搜索文章
-      </h1>
-      
-      {/* 搜索栏 */}
-      <SearchBar />
-      
-      {/* 搜索结果区域 */}
+    <>
+      <SearchBar onSearch={(value) => {/* 搜索处理 */}} initialValue={query} />
+      {/* 搜索结果展示 */}
       <div className="mt-10">
         {/* 加载中状态 */}
         {isLoading && (
@@ -167,6 +150,22 @@ export default function SearchPage() {
           </div>
         )}
       </div>
+    </>
+  );
+}
+
+/**
+ * 搜索页面组件
+ * 允许用户搜索文章并显示搜索结果
+ */
+export default function SearchPage() {
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center flicker">搜索文章</h1>
+      
+      <Suspense fallback={<div className="text-center py-10">加载中...</div>}>
+        <SearchContent />
+      </Suspense>
     </div>
   );
 } 

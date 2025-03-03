@@ -3,7 +3,6 @@ import ProfileCard from '@/components/ProfileCard'; // 导入个人名片组件
 import PostCard from '@/components/PostCard'; // 导入文章卡片组件
 import SearchBarWrapper from '@/components/SearchBarWrapper';
 import { Suspense } from 'react'; // 导入React的Suspense组件
-import PostList from '@/components/PostList'; // 假设您有这个组件
 
 // 设置页面重新验证时间（ISR）
 export const revalidate = 3600; // 每小时重新验证一次
@@ -52,7 +51,7 @@ function HomeContent() {
   // 这里使用 useSearchParams 的逻辑
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <PostList />
+      <PostsList />
     </div>
   );
 }
@@ -87,7 +86,7 @@ export default function Home() {
           
           {/* 使用Suspense包装文章列表，提供加载状态 */}
           <Suspense fallback={<PostsSkeleton />}>
-            <PostList />
+            <PostsList />
           </Suspense>
         </div>
       </div>

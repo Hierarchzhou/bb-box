@@ -6,7 +6,6 @@ import { searchPosts } from '@/lib/posts'; // 导入搜索文章的函数
 import SearchBar from '@/components/SearchBar'; // 导入搜索栏组件
 import PostCard from '@/components/PostCard'; // 导入文章卡片组件
 import { PostMetadata } from '@/lib/posts'; // 导入文章元数据接口
-import SearchContent from '@/components/SearchContent';
 
 /**
  * 搜索结果骨架屏组件
@@ -33,6 +32,7 @@ function SearchResultsSkeleton() {
 // 创建一个客户端组件来使用 useSearchParams
 function SearchContent() {
   const searchParams = useSearchParams();
+  const router = useRouter(); // 添加router定义
   const query = searchParams.get('q') || '';
   const [searchResults, setSearchResults] = useState<PostMetadata[]>([]);
   const [hasSearched, setHasSearched] = useState(false);

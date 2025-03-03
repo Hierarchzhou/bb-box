@@ -11,7 +11,6 @@ const nextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
-    domains: ['via.placeholder.com'], // 如果您使用了外部图片域名
   },
   
   // 严格模式

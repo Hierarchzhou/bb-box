@@ -1,6 +1,6 @@
 'use client'; // 声明这是一个客户端组件
 
-import { useState, useEffect, useCallback, useTransition } from 'react'; // 导入React钩子
+import { useState, useEffect, useCallback, useTransition, useRef } from 'react'; // 导入React钩子
 import { useRouter, useSearchParams } from 'next/navigation'; // 导入Next.js的路由和搜索参数钩子
 
 /**
@@ -19,6 +19,7 @@ const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   // 使用useTransition来优化UI响应
   const [isPending, startTransition] = useTransition();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // 使用 useRef 存储 timeout ID
   
   // 当URL中的搜索参数变化时更新搜索词
   useEffect(() => {
@@ -28,10 +29,11 @@ const SearchBar = () => {
   // 防抖搜索函数
   const debouncedSearch = useCallback(
     (value: string) => {
-      let timeoutId: NodeJS.Timeout;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current); // 安全地清除之前的 timeout
+      }
       
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         if (value.trim()) {
           startTransition(() => {
             router.push(`/search?q=${encodeURIComponent(value.trim())}`);
@@ -62,20 +64,38 @@ const SearchBar = () => {
   
   // 处理搜索词变化
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
+    const newValue = e.target.value;
+    setSearchQuery(newValue);
     
     // 使用防抖函数处理搜索
-    debouncedSearch(value);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current); // 安全地清除之前的 timeout
+    }
+    
+    timeoutRef.current = setTimeout(() => {
+      if (newValue.trim()) {
+        startTransition(() => {
+          debouncedSearch(newValue);
+        });
+      } else {
+        startTransition(() => {
+          setSearchQuery('');
+          if (window.location.pathname === '/search') {
+            router.push('/');
+          }
+        });
+      }
+    }, 500); // 500ms 防抖延迟
   };
   
-  // 处理清除搜索
-  const handleClear = () => {
-    setSearchQuery('');
-    if (window.location.pathname === '/search') {
-      router.push('/');
-    }
-  };
+  // 组件卸载时清除 timeout
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   
   return (
     <form onSubmit={handleSearch} className="w-full max-w-md mx-auto mb-8 relative">
@@ -101,7 +121,12 @@ const SearchBar = () => {
         {searchQuery && (
           <button
             type="button"
-            onClick={handleClear}
+            onClick={() => {
+              setSearchQuery('');
+              if (window.location.pathname === '/search') {
+                router.push('/');
+              }
+            }}
             className="absolute right-14 top-1/2 transform -translate-y-1/2"
             aria-label="清除搜索"
           >
